@@ -1,55 +1,113 @@
-# Flow ToDo
+# Flow ToDo (Modern ToDo Stack)
 
 ![Flow ToDo App Icon](./public/pwa-512x512.png)
 
-**Flow ToDo** is a premium, modern, and aesthetically immersive task management application designed to help you Organize your life with "flow". Built with a mobile-first approach, it combines powerful functional depth with a stunning "Big UI" design system, dark mode, and fluid animations.
+[![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-6.0-purple?style=for-the-badge&logo=vite)](https://vitejs.dev/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-3.0-sky?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
+[![PWA](https://img.shields.io/badge/PWA-Supported-orange?style=for-the-badge&logo=pwa)](https://web.dev/progressive-web-apps/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](./LICENSE)
 
-## 🚀 Features
+**Flow ToDo** (Repo: `modern-todo-stack`) is a premium, mobile-first task management application designed to induce "flow" state. It combines robust functionality—like drag-and-drop organization and PWA installability—with a stunning "Big UI" aesthetic, deep dark mode, and fluid animations.
+
+---
+
+## 🏗️ Architecture & Flow
+
+### System Overview
+
+The app is built on a unidirectional data flow architecture using React Context for global state management and LocalStorage for persistence.
+
+```mermaid
+graph TD
+    User((User)) -->|Interacts| UI[User Interface]
+    UI -->|Dispatches Actions| Context[TaskProvider Context]
+    Context -->|CRUD Operations| Logic[State Logic]
+    Logic -->|Persist| Storage[(LocalStorage)]
+    Logic -->|Update| State[Global State]
+    State -->|Re-render| UI
+    
+    subgraph Views
+        Dashboard[Dashboard View]
+        Today[Today View]
+        Upcoming[Upcoming View]
+        Projects[Projects Kanban]
+    end
+    
+    UI --- Views
+```
+
+### Drag & Drop Workflow
+
+Tasks can be seamlessly moved between project columns or rescheduled via drag-and-drop interactions.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant UI as Project View
+    participant DND as DndKit System
+    participant Context as TaskContext
+    participant DB as LocalStorage
+
+    User->>UI: Drags Task Item
+    UI->>DND: Detect Drag Start
+    User->>UI: Drops Task in "Work" Column
+    UI->>DND: Detect Drop Event (over.id)
+    DND->>Context: updateTaskCategory(taskId, 'work')
+    Context->>DB: Save Updated List
+    Context-->>UI: Trigger Re-render
+    UI-->>User: Visual Snap Animation
+```
+
+---
+
+## 🚀 Key Features
 
 ### 🌟 Dashboard Command Center
 
-- **Visual Analytics:** View real-time stats (Total, Done, Pending) with beautiful linear progress bars and large typography.
-- **Interactive Filtering:** Click on any stat card to instantly filter your active task list.
-- **Responsive Layout:** Adapts seamlessly from a vertical stack on mobile to a powerful 2x2 grid + list view on desktop.
+- **Visual Analytics:** Real-time filtered stats (Total, Done, Pending) with linear progress bars.
+- **Interactive Filtering:** Click stat cards to slice the active task list by status.
+- **Responsive Layout:**
+  - **Mobile:** Smart vertical stack with hidden overflow protection.
+  - **Desktop:** Asymmetric 60:40 split with 2x2 grid metrics.
 
 ### ✅ Advanced Task Management
 
-- **Smart Organization:** Categorize tasks into Projects, Personal, Work, Health, or create your own **Custom Categories** with dynamic colors.
-- **Drag & Drop Workflow:**
-  - **Kanban Board:** Drag tasks between category columns in the Projects view.
-  - **Timeline Planning:** Drag tasks between dates in the Upcoming view to reschedule them instantly.
-- **Contextual Creation:** "Add Task" buttons in specific views (like Projects or Upcoming) automatically pre-fill category or date information.
+- **Kanban Projects:** Drag & Drop tasks between categories (Project, Personal, Work, Health, Custom).
+- **Smart Planning:** "Add to Upcoming" pre-fills tomorrow's date.
+- **Custom Categories:** Create dynamic categories with custom colors and names.
+- **Context Awareness:** Task metadata wraps intelligently on mobile to preserve screen real estate.
 
-### 📱 Mobile-First & PWA
+### 📱 PWA & Mobile Experience
 
-- **Installable App:** Fully supported Progressive Web App (PWA). Install it on your iOS or Android device for a native-like experience.
-- **Touch Optimized:** Large touch targets, bottom navigation for mobile, and swipe-friendly interactions.
-- **No-Scroll Layout:** Carefully tuned CSS ensures the app fits your screen perfectly without unwanted horizontal scrolling.
+- **Native Feel:** Full Progressive Web App support (Service Worker, Manifest).
+- **Installable:** Add to Home Screen on iOS and Android.
+- **Touch Optimized:** `44px+` touch targets, swipe-friendly interactions, bottom navigation.
+- **No-Scroll Design:** Strictly constrained horizontal layout using `break-all` and flex shrinking to prevent layout shifts.
 
-### 🎨 Premium Aesthetic
-
-- **Deep Dark Mode:** A curated `slate-900` base with rich gradients (Indigo, Purple, Amber, Rose).
-- **Glassmorphism:** Frosted glass effects on cards and headers for depth and modernity.
-- **Fluid Animations:** Smooth transitions for modal openings, task additions, and page navigation.
+---
 
 ## 🛠️ Technology Stack
 
-- **Frontend Framework:** [React 18](https://reactjs.org/)
-- **Build Tool:** [Vite](https://vitejs.dev/)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **Icons:** [Lucide React](https://lucide.dev/)
-- **Drag & Drop:** [@dnd-kit](https://dndkit.com/) (Core, Sortable, Utilities)
-- **PWA:** [vite-plugin-pwa](https://vite-pwa-org.netlify.app/)
-- **Routing:** [React Router DOM](https://reactrouter.com/)
-- **State Management:** React Context API
+| Category | Technology | Purpose |
+|----------|------------|---------|
+| **Core** | React 18 | Component based UI |
+| **Build** | Vite | Lightning fast HMR & bundling |
+| **Styling** | Tailwind CSS | Utility-first styling system |
+| **State** | Context API | Global state management |
+| **Interactions** | @dnd-kit | Accessible drag-and-drop primitives |
+| **Icons** | Lucide React | Consistent, scalable vector icons |
+| **Mobile** | vite-plugin-pwa | Service Worker & Manifest generation |
+
+---
 
 ## 📦 Installation & Setup
 
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/flow-todo.git
-   cd flow-todo
+   git clone https://github.com/yourusername/modern-todo-stack.git
+   cd modern-todo-stack
    ```
 
 2. **Install dependencies:**
@@ -70,13 +128,14 @@
    npm run build
    ```
 
-## 📱 Installing on Mobile (PWA)
+## 📱 Mobile Installation (PWA)
 
-1. Open the app in your mobile browser (e.g., Chrome on Android or Safari on iOS).
-2. **Android:** Tap the "Install" prompt or go to Menu > "Install app".
-3. **iOS:** Tap the Share button > "Add to Home Screen".
-4. Enjoy the full-screen, native-like experience!
+1. **Access**: Navigate to the deployed URL on your mobile device.
+2. **Install**:
+   - **Android**: Tap "Install" in the prominent banner or Chrome menu.
+   - **iOS**: Tap "Share" → "Add to Home Screen".
+3. **Experience**: Launch from your home screen for a fullscreen, immersive experience.
 
 ---
 
-*Designed and Built with Flow.*
+*Designed with ❤️ for efficiency.*
