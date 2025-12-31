@@ -106,7 +106,7 @@ sequenceDiagram
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/modern-todo-stack.git
+   git clone https://github.com/ztr1566/modern-todo-stack.git
    cd modern-todo-stack
    ```
 
@@ -138,4 +138,4 @@ sequenceDiagram
 
 ---
 
-*Designed with ❤️ for efficiency.*
+*Designed by me for efficiency.*
